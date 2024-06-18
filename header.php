@@ -1,3 +1,5 @@
+<?php include ('db/dbcon.php'); ?>
+<?php include ('session.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +15,7 @@
 	
 	<!-- start: CSS -->
 	<link id="bootstrap-style" href="css/bootstrap.min.css" rel="stylesheet">
+	<link id="bootstrap-style" href="css/slide.css" rel="stylesheet">
 	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 	<link id="base-style" href="css/style.css" rel="stylesheet">
 	<link id="base-style-responsive" href="css/style-responsive.css" rel="stylesheet">
@@ -32,8 +35,17 @@
 		
 	<!-- start: Favicon -->
 	<link rel="shortcut icon" href="img/favicon.ico">
-	<!-- end: Favicon -->
+<!-- end: Favicon -->
+
+<?php
+//$user_query  = mysql_query("select * from admin where adminid = '$id_session'")or die(mysql_error());
+//$user_row =mysql_fetch_array($user_query);
+//$user_type  = $user_row['user_type'];
+?> 	
 	
+
+					<?php //if ($user_type == 'Dispatcher'){
+					?>
 <script>
 <!--
 
@@ -44,7 +56,7 @@ Over 200+ free scripts here!
 */
 
 //enter refresh time in "minutes:seconds" Minutes should range from 0 to inifinity. Seconds should range from 0 to 59
-var limit="0:10"
+var limit="0:25"
 
 var doctitle = document.title
 var parselimit=limit.split(":")
@@ -72,7 +84,8 @@ else if (window.attachEvent)
 	window.attachEvent("load", beginrefresh)
 
 //-->
-</script>
+</script>	
+					<?php //} ?>
 		
 		
 </head>
@@ -82,14 +95,45 @@ else if (window.attachEvent)
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="container-fluid">
-				<a class="brand"><span>Bus Transport Management Information System</span></a>
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="dashboard.php"><span>Bus Transport Management Information System</span></a>
 								
 				<!-- start: Header Menu -->
 				<div class="nav-no-collapse header-nav">
 					<ul class="nav pull-right">
-						<li style="margin:10px;">
-							<?php include('currentdate.php'); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php include('clock_lcd.php'); ?>
+						<!-- start: User Dropdown -->
+						<li class="dropdown">
+							<?php
+								include('db/dbcon.php');
+								$user_query=mysql_query("select *  from admin where adminid='$id_session'")or die(mysql_error());
+								$row=mysql_fetch_array($user_query); {
+							?>
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="halflings-icon user white"></i> <?php echo $row['firstname']; ?>
+								<span class="caret"></span>
+							</a>
+<?php } ?>
+							<ul class="dropdown-menu">
+								<li class="dropdown-menu-title">
+ 									<span>Account Settings</span>
+								</li>
+<?php
+$user_query  = mysql_query("select * from admin where adminid = '$id_session'")or die(mysql_error());
+$user_row =mysql_fetch_array($user_query);
+$user_type  = $user_row['user_type'];
+?>  
+					<?php if ($user_type == 'Admin'){
+					?>
+								<li><a href="profile.php"><i class="halflings-icon user"></i> User List</a></li>
+					<?php } ?>
+								<li><a href="logout.php"><i class="halflings-icon off"></i> Logout</a></li>
+							</ul>
 						</li>
+						<!-- end: User Dropdown -->
 					</ul>
 				</div>
 				<!-- end: Header Menu -->
@@ -101,9 +145,28 @@ else if (window.attachEvent)
 	
 		<div class="container-fluid-full">
 		<div class="row-fluid">
-	
-
+				
+			<!-- start: Main Menu -->
+			<div id="sidebar-left" class="span2">
+				<div class="nav-collapse sidebar-nav">
+					<ul class="nav nav-tabs nav-stacked main-menu">
+						<li><a href="dashboard.php"><i class="halflings-icon home white"></i><span class="hidden-tablet"> Home</span></a></li>	
+					<?php if ($user_type == 'Admin'){
+					?>
+						<li><a href="dispatcher.php"><i class="halflings-icon user white"></i><span class="hidden-tablet"> Dispatcher Profile</span></a></li>	
+					<?php } ?>
+						<li><a href="driver.php"><i class="halflings-icon user white"></i><span class="hidden-tablet"> Driver Profile</span></a></li>
+						<li><a href="conductor.php"><i class="halflings-icon user white"></i><span class="hidden-tablet"> Conductor Profile</span></a></li>	
+						<li><a href="schedule.php"><i class="halflings-icon list white"></i><span class="hidden-tablet"> Manage Schedule</span></a></li>
+						<li><a href="report.php"><i class="halflings-icon th white"></i><span class="hidden-tablet"> Reports</span></a></li>
+						<li><a href="bus.php"><i class="halflings-icon info-sign white"></i><span class="hidden-tablet"> Bus Information</span></a></li>	
+						<li><a href="branch.php"><i class="halflings-icon info-sign white"></i><span class="hidden-tablet"> Branch Information</span></a></li>	
+					</ul>
+				</div>
+			</div>
+			<!-- end: Main Menu -->
 			
 			<!-- start: Content -->
+			<div id="content" class="span10">
 			
 			
